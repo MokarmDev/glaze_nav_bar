@@ -50,12 +50,6 @@
       "languageVersion": "3.7"
     },
     {
-      "name": "glassmorphism",
-      "rootUri": "file:///C:/Users/Mokarm/AppData/Local/Pub/Cache/hosted/pub.dev/glassmorphism-3.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "leak_tracker",
       "rootUri": "file:///C:/Users/Mokarm/AppData/Local/Pub/Cache/hosted/pub.dev/leak_tracker-10.0.9",
       "packageUri": "lib/",

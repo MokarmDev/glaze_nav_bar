@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:glassmorphism/glassmorphism.dart';
 
 import 'glaze_nav_bar_item.dart';
 import 'src/nav_bar_item_widget.dart';
@@ -227,31 +227,31 @@ class GlazeNavBarState extends State<GlazeNavBar>
                           textDirection: Directionality.of(context),
                           height: widget.height,
                         ),
-                        child: GlassmorphicContainer(
-                          width: maxWidth,
-                          height: widget.height,
-                          borderRadius: widget.glassBorderRadius,
-                          blur: widget.glassBlur,
-                          alignment: Alignment.bottomCenter,
-                          border: widget.glassBorderWidth,
-                          linearGradient: widget.gradient as LinearGradient? ??
-                              LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  widget.color.withOpacity(widget.glassOpacity),
-                                  widget.color
-                                      .withOpacity(widget.glassOpacity * 0.5),
-                                ],
-                                stops: const [0.1, 1],
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaX: widget.glassBlur,
+                            sigmaY: widget.glassBlur,
+                          ),
+                          child: Container(
+                            width: maxWidth,
+                            height: widget.height,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                widget.glassBorderRadius,
                               ),
-                          borderGradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              widget.glassBorderColor.withOpacity(0.5),
-                              widget.glassBorderColor.withOpacity(0.2),
-                            ],
+                              gradient: widget.gradient as LinearGradient? ??
+                                  LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      widget.color
+                                          .withOpacity(widget.glassOpacity),
+                                      widget.color.withOpacity(
+                                          widget.glassOpacity * 0.5),
+                                    ],
+                                    stops: const [0.1, 1],
+                                  ),
+                            ),
                           ),
                         ),
                       ),
@@ -350,31 +350,38 @@ class _NavBarClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
+    // Guard against invalid size
+    if (size.width <= 0 || size.height <= 0) {
+      return Path()..addRect(Rect.zero);
+    }
+
     const s = 0.2;
     final span = 1.0 / itemsLength;
     final l = startingLoc + (span - s) / 2;
-    final loc = textDirection == TextDirection.rtl ? 0.8 - l : l;
+    // Clamp loc to valid range to prevent geometry errors
+    final loc =
+        (textDirection == TextDirection.rtl ? 0.8 - l : l).clamp(0.0, 1.0 - s);
     final bottom = hasLabel
         ? (Platform.isAndroid ? 0.55 : 0.45)
         : (Platform.isAndroid ? 0.6 : 0.5);
 
     final path = Path()
       ..moveTo(0, 0)
-      ..lineTo(size.width * (loc - 0.05), 0)
+      ..lineTo(size.width * (loc - 0.05).clamp(0.0, 1.0), 0)
       ..cubicTo(
-        size.width * (loc + s * 0.2),
+        size.width * (loc + s * 0.2).clamp(0.0, 1.0),
         size.height * 0.05,
-        size.width * loc,
+        size.width * loc.clamp(0.0, 1.0),
         size.height * bottom,
-        size.width * (loc + s * 0.5),
+        size.width * (loc + s * 0.5).clamp(0.0, 1.0),
         size.height * bottom,
       )
       ..cubicTo(
-        size.width * (loc + s),
+        size.width * (loc + s).clamp(0.0, 1.0),
         size.height * bottom,
-        size.width * (loc + s * 0.8),
+        size.width * (loc + s * 0.8).clamp(0.0, 1.0),
         size.height * 0.05,
-        size.width * (loc + s + 0.05),
+        size.width * (loc + s + 0.05).clamp(0.0, 1.0),
         0,
       )
       ..lineTo(size.width, 0)
@@ -413,10 +420,15 @@ class _NavBarBorderPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Guard against invalid size
+    if (size.width <= 0 || size.height <= 0) return;
+
     const s = 0.2;
     final span = 1.0 / itemsLength;
     final l = startingLoc + (span - s) / 2;
-    final loc = textDirection == TextDirection.rtl ? 0.8 - l : l;
+    // Clamp loc to valid range to prevent geometry errors
+    final loc =
+        (textDirection == TextDirection.rtl ? 0.8 - l : l).clamp(0.0, 1.0 - s);
     final bottom = hasLabel
         ? (Platform.isAndroid ? 0.55 : 0.45)
         : (Platform.isAndroid ? 0.6 : 0.5);
@@ -429,21 +441,21 @@ class _NavBarBorderPainter extends CustomPainter {
 
     final path = Path()
       ..moveTo(0, 0)
-      ..lineTo(size.width * (loc - 0.05), 0)
+      ..lineTo(size.width * (loc - 0.05).clamp(0.0, 1.0), 0)
       ..cubicTo(
-        size.width * (loc + s * 0.2),
+        size.width * (loc + s * 0.2).clamp(0.0, 1.0),
         size.height * 0.05,
-        size.width * loc,
+        size.width * loc.clamp(0.0, 1.0),
         size.height * bottom,
-        size.width * (loc + s * 0.5),
+        size.width * (loc + s * 0.5).clamp(0.0, 1.0),
         size.height * bottom,
       )
       ..cubicTo(
-        size.width * (loc + s),
+        size.width * (loc + s).clamp(0.0, 1.0),
         size.height * bottom,
-        size.width * (loc + s * 0.8),
+        size.width * (loc + s * 0.8).clamp(0.0, 1.0),
         size.height * 0.05,
-        size.width * (loc + s + 0.05),
+        size.width * (loc + s + 0.05).clamp(0.0, 1.0),
         0,
       )
       ..lineTo(size.width, 0);

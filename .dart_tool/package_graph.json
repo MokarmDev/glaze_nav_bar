@@ -7,8 +7,7 @@
       "name": "glaze_nav_bar",
       "version": "1.0.0",
       "dependencies": [
-        "flutter",
-        "glassmorphism"
+        "flutter"
       ],
       "devDependencies": [
         "flutter_test"
@@ -40,13 +39,6 @@
         "test_api",
         "vector_math",
         "vm_service"
-      ]
-    },
-    {
-      "name": "glassmorphism",
-      "version": "3.0.0",
-      "dependencies": [
-        "flutter"
       ]
     },
     {
