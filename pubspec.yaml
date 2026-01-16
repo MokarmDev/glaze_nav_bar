@@ -1,6 +1,6 @@
 name: glaze_nav_bar
 description: A stunning glassmorphic navigation bar with gradient support, smooth animations, badges, and modern design for Flutter.
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/MokarmDev/glaze_nav_bar
 
 environment:
