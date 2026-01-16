@@ -300,6 +300,10 @@ class GlazeNavBarState extends State<GlazeNavBar>
                               index: widget.items.indexOf(item),
                               label: item.label,
                               labelStyle: item.labelStyle,
+                              badgeCount: item.badgeCount,
+                              badgeColor: item.badgeColor,
+                              badgeTextColor: item.badgeTextColor,
+                              showBadge: item.showBadge,
                               child: Center(child: item.child),
                             );
                           }).toList(),
