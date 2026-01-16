@@ -7,12 +7,14 @@ class NavCustomClipper extends CustomClipper<Rect> {
 
   @override
   Rect getClip(Size size) {
-    //Clip only the bottom of the widget
+    // Create a large enough clip rect to allow the floating button to be visible
+    // above the navigation bar without causing geometry assertion errors
+    final double extraHeight = 100.0; // Extra space for the floating button
     return Rect.fromLTWH(
       0,
-      -deviceHeight + size.height,
+      -extraHeight,
       size.width,
-      deviceHeight,
+      size.height + extraHeight,
     );
   }
 
