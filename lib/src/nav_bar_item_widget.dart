@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'nav_bar_badge.dart';
+
 class NavBarItemWidget extends StatelessWidget {
   final double position;
   final int length;
@@ -11,7 +13,14 @@ class NavBarItemWidget extends StatelessWidget {
   final String? label;
   final TextStyle? labelStyle;
 
-  NavBarItemWidget({
+  // Badge properties
+  final int? badgeCount;
+  final Color? badgeColor;
+  final Color? badgeTextColor;
+  final bool showBadge;
+
+  const NavBarItemWidget({
+    super.key,
     required this.onTap,
     required this.position,
     required this.length,
@@ -19,6 +28,10 @@ class NavBarItemWidget extends StatelessWidget {
     required this.child,
     this.label,
     this.labelStyle,
+    this.badgeCount,
+    this.badgeColor,
+    this.badgeTextColor,
+    this.showBadge = false,
   });
 
   @override
@@ -61,6 +74,15 @@ class NavBarItemWidget extends StatelessWidget {
     final difference = (position - desiredPosition).abs();
     final verticalAlignment = 1 - length * difference;
     final opacity = length * difference;
+
+    final iconWithBadge = NavBarBadge(
+      count: badgeCount,
+      backgroundColor: badgeColor ?? Colors.red,
+      textColor: badgeTextColor ?? Colors.white,
+      showDot: showBadge,
+      child: child,
+    );
+
     return Transform.translate(
       offset: Offset(
         0,
@@ -68,7 +90,7 @@ class NavBarItemWidget extends StatelessWidget {
       ),
       child: Opacity(
         opacity: difference < 1.0 / length * 0.99 ? opacity : 1.0,
-        child: child,
+        child: iconWithBadge,
       ),
     );
   }
