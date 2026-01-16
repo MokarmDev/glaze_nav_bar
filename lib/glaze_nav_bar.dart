@@ -107,14 +107,20 @@ class GlazeNavBarState extends State<GlazeNavBar>
     _animationController = AnimationController(vsync: this, value: _pos);
     _animationController.addListener(() {
       setState(() {
-        _pos = _animationController.value;
+        _pos = _animationController.value.clamp(0.0, 1.0);
         final endingPos = _endingIndex / widget.items.length;
         final middle = (endingPos + _startingPos) / 2;
         if ((endingPos - _pos).abs() < (_startingPos - _pos).abs()) {
           _icon = widget.items[_endingIndex].child;
         }
-        _buttonHide =
-            (1 - ((middle - _pos) / (_startingPos - middle)).abs()).abs();
+        // Prevent division by zero and NaN values
+        final denominator = _startingPos - middle;
+        if (denominator.abs() < 0.0001) {
+          _buttonHide = 1.0;
+        } else {
+          _buttonHide =
+              (1 - ((middle - _pos) / denominator).abs()).abs().clamp(0.0, 1.0);
+        }
       });
     });
   }
@@ -174,14 +180,17 @@ class GlazeNavBarState extends State<GlazeNavBar>
                       bottom: widget.height - 105.0,
                       left: textDirection == TextDirection.rtl
                           ? null
-                          : _pos * maxWidth,
+                          : (_pos * maxWidth).clamp(0.0, maxWidth),
                       right: textDirection == TextDirection.rtl
-                          ? _pos * maxWidth
+                          ? (_pos * maxWidth).clamp(0.0, maxWidth)
                           : null,
                       width: maxWidth / _length,
                       child: Center(
                         child: Transform.translate(
-                          offset: Offset(0, (_buttonHide - 1) * 80),
+                          offset: Offset(
+                              0,
+                              ((_buttonHide.isNaN ? 1.0 : _buttonHide) - 1) *
+                                  80),
                           child: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
