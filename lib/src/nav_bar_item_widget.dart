@@ -2,8 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'nav_bar_badge.dart';
-
 class NavBarItemWidget extends StatelessWidget {
   final double position;
   final int length;
@@ -17,6 +15,8 @@ class NavBarItemWidget extends StatelessWidget {
   final int? badgeCount;
   final Color? badgeColor;
   final Color? badgeTextColor;
+  final Color? activeBadgeColor;
+  final Color? activeBadgeTextColor;
   final bool showBadge;
 
   const NavBarItemWidget({
@@ -31,6 +31,8 @@ class NavBarItemWidget extends StatelessWidget {
     this.badgeCount,
     this.badgeColor,
     this.badgeTextColor,
+    this.activeBadgeColor,
+    this.activeBadgeTextColor,
     this.showBadge = false,
   });
 
@@ -75,13 +77,40 @@ class NavBarItemWidget extends StatelessWidget {
     final verticalAlignment = 1 - length * difference;
     final opacity = length * difference;
 
-    final iconWithBadge = NavBarBadge(
-      count: badgeCount,
-      backgroundColor: badgeColor ?? Colors.red,
-      textColor: badgeTextColor ?? Colors.white,
-      showDot: showBadge,
-      child: child,
-    );
+    // Determine if this item is active (selected)
+    final isActive = difference < 0.01;
+
+    // Build icon with badge
+    Widget iconWithBadge = child;
+
+    // Only show badge if count > 0 or showBadge is true
+    if ((badgeCount != null && badgeCount! > 0) || showBadge) {
+      final bgColor = isActive
+          ? (activeBadgeColor ?? badgeColor ?? Colors.red)
+          : (badgeColor ?? Colors.red);
+      final txtColor = isActive
+          ? (activeBadgeTextColor ?? badgeTextColor ?? Colors.white)
+          : (badgeTextColor ?? Colors.white);
+
+      if (showBadge && (badgeCount == null || badgeCount == 0)) {
+        // Show dot badge
+        iconWithBadge = Badge(
+          alignment: Alignment.topRight,
+          backgroundColor: bgColor,
+          smallSize: 8,
+          child: child,
+        );
+      } else {
+        // Show count badge
+        iconWithBadge = Badge.count(
+          count: badgeCount!,
+          alignment: Alignment.topRight,
+          textColor: txtColor,
+          backgroundColor: bgColor,
+          child: child,
+        );
+      }
+    }
 
     return Transform.translate(
       offset: Offset(

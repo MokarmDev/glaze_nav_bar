@@ -303,6 +303,8 @@ class GlazeNavBarState extends State<GlazeNavBar>
                               badgeCount: item.badgeCount,
                               badgeColor: item.badgeColor,
                               badgeTextColor: item.badgeTextColor,
+                              activeBadgeColor: item.activeBadgeColor,
+                              activeBadgeTextColor: item.activeBadgeTextColor,
                               showBadge: item.showBadge,
                               child: Center(child: item.child),
                             );
