@@ -216,7 +216,7 @@ class GlazeNavBarState extends State<GlazeNavBar>
                               type: MaterialType.circle,
                               child: Padding(
                                 padding: EdgeInsets.all(widget.iconPadding),
-                                child: _icon,
+                                child: _buildFloatingIcon(),
                               ),
                             ),
                           ),
@@ -306,7 +306,7 @@ class GlazeNavBarState extends State<GlazeNavBar>
                               activeBadgeColor: item.activeBadgeColor,
                               activeBadgeTextColor: item.activeBadgeTextColor,
                               showBadge: item.showBadge,
-                              child: Center(child: item.child),
+                              child: item.child,
                             );
                           }).toList(),
                         ),
@@ -319,6 +319,40 @@ class GlazeNavBarState extends State<GlazeNavBar>
           );
         },
       ),
+    );
+  }
+
+  /// Builds the floating button icon with badge if applicable.
+  Widget _buildFloatingIcon() {
+    final item = widget.items[_endingIndex];
+
+    // If no badge count and showBadge is false, return just the icon
+    if ((item.badgeCount == null || item.badgeCount == 0) && !item.showBadge) {
+      return _icon;
+    }
+
+    // Get active colors (floating button is always the active item)
+    final bgColor = item.activeBadgeColor ?? item.badgeColor ?? Colors.red;
+    final txtColor =
+        item.activeBadgeTextColor ?? item.badgeTextColor ?? Colors.white;
+
+    if (item.showBadge && (item.badgeCount == null || item.badgeCount == 0)) {
+      // Show dot badge
+      return Badge(
+        alignment: Alignment.topRight,
+        backgroundColor: bgColor,
+        smallSize: 8,
+        child: _icon,
+      );
+    }
+
+    // Show count badge
+    return Badge.count(
+      count: item.badgeCount!,
+      alignment: Alignment.topRight,
+      textColor: txtColor,
+      backgroundColor: bgColor,
+      child: _icon,
     );
   }
 
