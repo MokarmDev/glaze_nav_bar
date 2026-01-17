@@ -119,7 +119,7 @@ class NavBarItemWidget extends StatelessWidget {
       ),
       child: Opacity(
         opacity: difference < 1.0 / length * 0.99 ? opacity : 1.0,
-        child: iconWithBadge,
+        child: Center(child: iconWithBadge),
       ),
     );
   }
