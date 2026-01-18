@@ -7,6 +7,9 @@ import 'glaze_nav_bar_item.dart';
 import 'src/nav_bar_item_widget.dart';
 import 'src/nav_custom_clipper.dart';
 
+export 'glaze_nav_bar_item.dart';
+export 'glaze_nav_bar_theme.dart';
+
 typedef _LetIndexPage = bool Function(int value);
 
 /// A stunning glassmorphic bottom navigation bar with gradient support,

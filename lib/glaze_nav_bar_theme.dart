@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:flutter/material.dart';
 
 /// Theme data for [GlazeNavBar].
@@ -39,6 +41,68 @@ class GlazeNavBarThemeData extends ThemeExtension<GlazeNavBarThemeData> {
     this.animationDuration,
     this.animationCurve,
   });
+
+  /// Creates a light theme for [GlazeNavBar].
+  ///
+  /// This theme uses light colors suitable for light mode apps.
+  ///
+  /// Example:
+  /// ```dart
+  /// MaterialApp(
+  ///   theme: ThemeData.light().copyWith(
+  ///     extensions: [GlazeNavBarThemeData.light()],
+  ///   ),
+  /// )
+  /// ```
+  factory GlazeNavBarThemeData.light() {
+    return const GlazeNavBarThemeData(
+      color: Color(0xFFFFFFFF),
+      buttonBackgroundColor: Color(0xFFF5F5F5),
+      backgroundColor: Colors.transparent,
+      glassBorderColor: Color(0x4DFFFFFF),
+      buttonBorderColor: Color(0x80FFFFFF),
+      glassBlur: 20,
+      glassOpacity: 0.25,
+      glassBorderRadius: 0,
+      glassBorderWidth: 1.5,
+      buttonBorderWidth: 3.0,
+      height: 75.0,
+      iconPadding: 12.0,
+      animationDuration: Duration(milliseconds: 600),
+      animationCurve: Curves.easeOut,
+    );
+  }
+
+  /// Creates a dark theme for [GlazeNavBar].
+  ///
+  /// This theme uses dark colors suitable for dark mode apps.
+  ///
+  /// Example:
+  /// ```dart
+  /// MaterialApp(
+  ///   darkTheme: ThemeData.dark().copyWith(
+  ///     extensions: [GlazeNavBarThemeData.dark()],
+  ///   ),
+  /// )
+  /// ```
+  factory GlazeNavBarThemeData.dark() {
+    return const GlazeNavBarThemeData(
+      color: Color(0xFF1E1E1E),
+      buttonBackgroundColor: Color(0xFF2D2D2D),
+      backgroundColor: Colors.transparent,
+      glassBorderColor: Color(0x33FFFFFF),
+      buttonBorderColor: Color(0x4DFFFFFF),
+      glassBlur: 25,
+      glassOpacity: 0.15,
+      glassBorderRadius: 0,
+      glassBorderWidth: 1.0,
+      buttonBorderWidth: 2.5,
+      height: 75.0,
+      iconPadding: 12.0,
+      animationDuration: Duration(milliseconds: 600),
+      animationCurve: Curves.easeOut,
+    );
+  }
 
   /// The primary color of the navigation bar.
   final Color? color;
@@ -158,31 +222,41 @@ class GlazeNavBarThemeData extends ThemeExtension<GlazeNavBarThemeData> {
   /// Resolves the theme data with fallbacks from [ThemeData].
   ///
   /// This method provides sensible defaults based on the current theme
-  /// when specific values are not set.
+  /// brightness (light or dark mode) when specific values are not set.
+  ///
+  /// The resolved values will automatically adapt to the app's theme mode.
   GlazeNavBarThemeData resolve(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Get default theme based on brightness
+    final defaults =
+        isDark ? GlazeNavBarThemeData.dark() : GlazeNavBarThemeData.light();
 
     return GlazeNavBarThemeData(
-      color: color ?? colorScheme.surface,
-      buttonBackgroundColor:
-          buttonBackgroundColor ?? colorScheme.primaryContainer,
-      backgroundColor: backgroundColor ?? Colors.transparent,
-      gradient: gradient,
-      buttonGradient: buttonGradient,
-      glassBorderColor:
-          glassBorderColor ?? colorScheme.outline.withValues(alpha: 0.3),
-      buttonBorderColor:
-          buttonBorderColor ?? colorScheme.outline.withValues(alpha: 0.5),
-      glassBlur: glassBlur ?? 20,
-      glassOpacity: glassOpacity ?? 0.2,
-      glassBorderRadius: glassBorderRadius ?? 0,
-      glassBorderWidth: glassBorderWidth ?? 1.5,
-      buttonBorderWidth: buttonBorderWidth ?? 3.0,
-      height: height ?? 75.0,
-      iconPadding: iconPadding ?? 12.0,
-      animationDuration: animationDuration ?? const Duration(milliseconds: 600),
-      animationCurve: animationCurve ?? Curves.easeOut,
+      color: color ?? defaults.color ?? colorScheme.surface,
+      buttonBackgroundColor: buttonBackgroundColor ??
+          defaults.buttonBackgroundColor ??
+          colorScheme.primaryContainer,
+      backgroundColor: backgroundColor ?? defaults.backgroundColor,
+      gradient: gradient ?? defaults.gradient,
+      buttonGradient: buttonGradient ?? defaults.buttonGradient,
+      glassBorderColor: glassBorderColor ??
+          defaults.glassBorderColor ??
+          colorScheme.outline.withValues(alpha: isDark ? 0.2 : 0.3),
+      buttonBorderColor: buttonBorderColor ??
+          defaults.buttonBorderColor ??
+          colorScheme.outline.withValues(alpha: isDark ? 0.3 : 0.5),
+      glassBlur: glassBlur ?? defaults.glassBlur,
+      glassOpacity: glassOpacity ?? defaults.glassOpacity,
+      glassBorderRadius: glassBorderRadius ?? defaults.glassBorderRadius,
+      glassBorderWidth: glassBorderWidth ?? defaults.glassBorderWidth,
+      buttonBorderWidth: buttonBorderWidth ?? defaults.buttonBorderWidth,
+      height: height ?? defaults.height,
+      iconPadding: iconPadding ?? defaults.iconPadding,
+      animationDuration: animationDuration ?? defaults.animationDuration,
+      animationCurve: animationCurve ?? defaults.animationCurve,
     );
   }
 
