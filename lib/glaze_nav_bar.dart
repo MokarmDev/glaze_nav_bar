@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -78,7 +77,7 @@ class GlazeNavBar extends StatefulWidget {
         assert(items.isNotEmpty),
         assert(0 <= index && index < items.length),
         assert(maxWidth == null || 0 <= maxWidth),
-        height = height ?? (Platform.isAndroid ? 70.0 : 80.0),
+        height = height ?? 75.0,
         hasLabel = items.any((item) => item.label != null),
         super(key: key);
 
@@ -205,7 +204,7 @@ class GlazeNavBarState extends State<GlazeNavBar>
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
+                                  color: Colors.black.withValues(alpha: 0.1),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -235,6 +234,8 @@ class GlazeNavBarState extends State<GlazeNavBar>
                           hasLabel: widget.hasLabel,
                           textDirection: Directionality.of(context),
                           height: widget.height,
+                          isAndroid: Theme.of(context).platform ==
+                              TargetPlatform.android,
                         ),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(
@@ -253,10 +254,10 @@ class GlazeNavBarState extends State<GlazeNavBar>
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      widget.color
-                                          .withOpacity(widget.glassOpacity),
-                                      widget.color.withOpacity(
-                                          widget.glassOpacity * 0.5),
+                                      widget.color.withValues(
+                                          alpha: widget.glassOpacity),
+                                      widget.color.withValues(
+                                          alpha: widget.glassOpacity * 0.5),
                                     ],
                                     stops: const [0.1, 1],
                                   ),
@@ -280,6 +281,8 @@ class GlazeNavBarState extends State<GlazeNavBar>
                             textDirection: Directionality.of(context),
                             borderColor: widget.glassBorderColor,
                             borderWidth: widget.glassBorderWidth,
+                            isAndroid: Theme.of(context).platform ==
+                                TargetPlatform.android,
                           ),
                         ),
                       ),
@@ -388,6 +391,7 @@ class _NavBarClipper extends CustomClipper<Path> {
   final bool hasLabel;
   final TextDirection textDirection;
   final double height;
+  final bool isAndroid;
 
   _NavBarClipper({
     required this.startingLoc,
@@ -395,6 +399,7 @@ class _NavBarClipper extends CustomClipper<Path> {
     required this.hasLabel,
     required this.textDirection,
     required this.height,
+    required this.isAndroid,
   });
 
   @override
@@ -410,9 +415,8 @@ class _NavBarClipper extends CustomClipper<Path> {
     // Clamp loc to valid range to prevent geometry errors
     final loc =
         (textDirection == TextDirection.rtl ? 0.8 - l : l).clamp(0.0, 1.0 - s);
-    final bottom = hasLabel
-        ? (Platform.isAndroid ? 0.55 : 0.45)
-        : (Platform.isAndroid ? 0.6 : 0.5);
+    final bottom =
+        hasLabel ? (isAndroid ? 0.55 : 0.45) : (isAndroid ? 0.6 : 0.5);
 
     final path = Path()
       ..moveTo(0, 0)
@@ -445,7 +449,8 @@ class _NavBarClipper extends CustomClipper<Path> {
   bool shouldReclip(_NavBarClipper oldClipper) {
     return startingLoc != oldClipper.startingLoc ||
         itemsLength != oldClipper.itemsLength ||
-        hasLabel != oldClipper.hasLabel;
+        hasLabel != oldClipper.hasLabel ||
+        isAndroid != oldClipper.isAndroid;
   }
 }
 
@@ -457,6 +462,7 @@ class _NavBarBorderPainter extends CustomPainter {
   final TextDirection textDirection;
   final Color borderColor;
   final double borderWidth;
+  final bool isAndroid;
 
   _NavBarBorderPainter({
     required this.startingLoc,
@@ -465,6 +471,7 @@ class _NavBarBorderPainter extends CustomPainter {
     required this.textDirection,
     required this.borderColor,
     required this.borderWidth,
+    required this.isAndroid,
   });
 
   @override
@@ -478,9 +485,8 @@ class _NavBarBorderPainter extends CustomPainter {
     // Clamp loc to valid range to prevent geometry errors
     final loc =
         (textDirection == TextDirection.rtl ? 0.8 - l : l).clamp(0.0, 1.0 - s);
-    final bottom = hasLabel
-        ? (Platform.isAndroid ? 0.55 : 0.45)
-        : (Platform.isAndroid ? 0.6 : 0.5);
+    final bottom =
+        hasLabel ? (isAndroid ? 0.55 : 0.45) : (isAndroid ? 0.6 : 0.5);
 
     final paint = Paint()
       ..color = borderColor
@@ -518,6 +524,7 @@ class _NavBarBorderPainter extends CustomPainter {
         itemsLength != oldDelegate.itemsLength ||
         hasLabel != oldDelegate.hasLabel ||
         borderColor != oldDelegate.borderColor ||
-        borderWidth != oldDelegate.borderWidth;
+        borderWidth != oldDelegate.borderWidth ||
+        isAndroid != oldDelegate.isAndroid;
   }
 }
