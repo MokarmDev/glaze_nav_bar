@@ -133,6 +133,66 @@ ElevatedButton(
 
 ---
 
+## 🎨 Theming
+
+### Light & Dark Mode Support
+
+GlazeNavBar automatically adapts to your app's theme. Use the built-in factory constructors:
+
+```dart
+MaterialApp(
+  theme: ThemeData.light().copyWith(
+    extensions: [GlazeNavBarThemeData.light()],
+  ),
+  darkTheme: ThemeData.dark().copyWith(
+    extensions: [GlazeNavBarThemeData.dark()],
+  ),
+  themeMode: ThemeMode.system, // Automatically switches based on system
+)
+```
+
+### Custom Theme
+
+Create a custom theme by extending the base:
+
+```dart
+MaterialApp(
+  theme: ThemeData.light().copyWith(
+    extensions: [
+      GlazeNavBarThemeData(
+        color: Colors.purple,
+        buttonBackgroundColor: Colors.deepPurple,
+        glassBlur: 25,
+        glassOpacity: 0.3,
+      ),
+    ],
+  ),
+)
+```
+
+### GlazeNavBarThemeData
+
+| Attribute               | Description                        |
+| ----------------------- | ---------------------------------- |
+| `color`                 | Primary color of the nav bar       |
+| `buttonBackgroundColor` | Floating button background         |
+| `backgroundColor`       | Background behind the nav bar      |
+| `gradient`              | Gradient for nav bar               |
+| `buttonGradient`        | Gradient for floating button       |
+| `glassBorderColor`      | Border color for glass effect      |
+| `buttonBorderColor`     | Border color for floating button   |
+| `glassBlur`             | Blur intensity (default: 20/25)    |
+| `glassOpacity`          | Glass opacity (default: 0.25/0.15) |
+| `glassBorderRadius`     | Border radius                      |
+| `glassBorderWidth`      | Border width                       |
+| `buttonBorderWidth`     | Floating button border width       |
+| `height`                | Navigation bar height              |
+| `iconPadding`           | Padding around floating icon       |
+| `animationDuration`     | Animation duration                 |
+| `animationCurve`        | Animation curve                    |
+
+---
+
 ## License
 
 MIT License - see the [LICENSE](LICENSE) file for details.
