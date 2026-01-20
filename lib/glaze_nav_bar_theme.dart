@@ -56,15 +56,15 @@ class GlazeNavBarThemeData extends ThemeExtension<GlazeNavBarThemeData> {
   /// ```
   factory GlazeNavBarThemeData.light() {
     return const GlazeNavBarThemeData(
-      color: Color(0xFFFFFFFF),
-      buttonBackgroundColor: Color(0xFFF5F5F5),
-      backgroundColor: Colors.transparent,
-      glassBorderColor: Color(0x4DFFFFFF),
-      buttonBorderColor: Color(0x80FFFFFF),
-      glassBlur: 20,
-      glassOpacity: 0.25,
+      color: Color(0xFF4A90E2), // Vibrant blue
+      buttonBackgroundColor: Color(0xFF5BA3F5), // Lighter blue for button
+      backgroundColor: Color(0xFFFFFFFF), // Solid white background
+      glassBorderColor: Color(0x66FFFFFF), // More visible border
+      buttonBorderColor: Color(0xFFFFFFFF), // White border for button
+      glassBlur: 15,
+      glassOpacity: 0.35, // More opaque for better visibility
       glassBorderRadius: 0,
-      glassBorderWidth: 1.5,
+      glassBorderWidth: 2.0, // Thicker border
       buttonBorderWidth: 3.0,
       height: 75.0,
       iconPadding: 12.0,
@@ -89,7 +89,7 @@ class GlazeNavBarThemeData extends ThemeExtension<GlazeNavBarThemeData> {
     return const GlazeNavBarThemeData(
       color: Color(0xFF1E1E1E),
       buttonBackgroundColor: Color(0xFF2D2D2D),
-      backgroundColor: Colors.transparent,
+      backgroundColor: Color(0xFF1E1E1E),
       glassBorderColor: Color(0x33FFFFFF),
       buttonBorderColor: Color(0x4DFFFFFF),
       glassBlur: 25,
