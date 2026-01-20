@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-01-20
+
+### 📚 Documentation
+
+- 🎬 **Demo Videos** - Added visual demonstrations showcasing dark and light mode in README
+- ✨ **Enhanced README** - Improved documentation with side-by-side video comparisons
+
+---
+
 ## [1.1.0] - 2026-01-18
 
 ### ✨ New Features

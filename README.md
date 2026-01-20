@@ -17,6 +17,27 @@ A stunning glassmorphic navigation bar with gradient support, smooth animations,
 
 ---
 
+## 🎬 Demo
+
+See GlazeNavBar in action with smooth animations and beautiful glassmorphic effects:
+
+<table>
+  <tr>
+    <td align="center">
+      <b>🌙 Dark Mode</b><br/>
+      <img src="demo_dark.mp4" width="300"/>
+    </td>
+    <td align="center">
+      <b>☀️ Light Mode</b><br/>
+      <img src="demo_light.mp4" width="300"/>
+    </td>
+  </tr>
+</table>
+
+> **Features shown:** Smooth tab transitions, gradient effects, glassmorphism blur, floating button, and adaptive theming.
+
+---
+
 ## Installation
 
 ```yaml
