@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'glaze_nav_bar_item.dart';
+import 'glaze_nav_bar_theme.dart';
 import 'src/nav_bar_item_widget.dart';
 import 'src/nav_custom_clipper.dart';
 
@@ -32,55 +33,54 @@ typedef _LetIndexPage = bool Function(int value);
 class GlazeNavBar extends StatefulWidget {
   final List<GlazeNavBarItem> items;
   final int index;
-  final Color color;
+  final Color? color;
   final Color? buttonBackgroundColor;
   final Gradient? gradient;
   final Gradient? buttonGradient;
-  final Color backgroundColor;
+  final Color? backgroundColor;
   final ValueChanged<int>? onTap;
   final _LetIndexPage letIndexChange;
-  final Curve animationCurve;
-  final Duration animationDuration;
-  final double height;
+  final Curve? animationCurve;
+  final Duration? animationDuration;
+  final double? height;
   final double? maxWidth;
-  final double iconPadding;
+  final double? iconPadding;
   final bool hasLabel;
-  final double glassBlur;
-  final double glassOpacity;
-  final double glassBorderRadius;
-  final double glassBorderWidth;
-  final Color glassBorderColor;
-  final Color buttonBorderColor;
-  final double buttonBorderWidth;
+  final double? glassBlur;
+  final double? glassOpacity;
+  final double? glassBorderRadius;
+  final double? glassBorderWidth;
+  final Color? glassBorderColor;
+  final Color? buttonBorderColor;
+  final double? buttonBorderWidth;
 
   GlazeNavBar({
     Key? key,
     required this.items,
     this.index = 0,
-    this.color = Colors.white,
+    this.color,
     this.buttonBackgroundColor,
-    this.backgroundColor = Colors.transparent,
+    this.backgroundColor,
     this.onTap,
     this.gradient,
     this.buttonGradient,
     _LetIndexPage? letIndexChange,
-    this.animationCurve = Curves.easeOut,
-    this.animationDuration = const Duration(milliseconds: 600),
-    this.iconPadding = 12.0,
+    this.animationCurve,
+    this.animationDuration,
+    this.iconPadding,
     this.maxWidth,
-    this.glassBlur = 20,
-    this.glassOpacity = 0.2,
-    this.glassBorderRadius = 0,
-    this.glassBorderWidth = 1.5,
-    this.glassBorderColor = Colors.white,
-    this.buttonBorderColor = Colors.white,
-    this.buttonBorderWidth = 3.0,
-    double? height,
+    this.glassBlur,
+    this.glassOpacity,
+    this.glassBorderRadius,
+    this.glassBorderWidth,
+    this.glassBorderColor,
+    this.buttonBorderColor,
+    this.buttonBorderWidth,
+    this.height,
   })  : letIndexChange = letIndexChange ?? ((_) => true),
         assert(items.isNotEmpty),
         assert(0 <= index && index < items.length),
         assert(maxWidth == null || 0 <= maxWidth),
-        height = height ?? 75.0,
         hasLabel = items.any((item) => item.label != null),
         super(key: key);
 
@@ -134,10 +134,11 @@ class GlazeNavBarState extends State<GlazeNavBar>
       final newPosition = widget.index / _length;
       _startingPos = _pos;
       _endingIndex = widget.index;
+      final theme = GlazeNavBarTheme.of(context).resolve(context);
       _animationController.animateTo(
         newPosition,
-        duration: widget.animationDuration,
-        curve: widget.animationCurve,
+        duration: widget.animationDuration ?? theme.animationDuration!,
+        curve: widget.animationCurve ?? theme.animationCurve!,
       );
     }
     if (!_animationController.isAnimating) {
@@ -153,9 +154,36 @@ class GlazeNavBarState extends State<GlazeNavBar>
 
   @override
   Widget build(BuildContext context) {
+    // Resolve theme data
+    final theme = GlazeNavBarTheme.of(context).resolve(context);
+
+    // Resolve values
+    final effectiveColor = widget.color ?? theme.color!;
+    final effectiveButtonBackgroundColor =
+        widget.buttonBackgroundColor ?? theme.buttonBackgroundColor;
+    final effectiveBackgroundColor =
+        widget.backgroundColor ?? theme.backgroundColor!;
+    final effectiveGradient = widget.gradient ?? theme.gradient;
+    final effectiveButtonGradient =
+        widget.buttonGradient ?? theme.buttonGradient;
+    final effectiveGlassBorderColor =
+        widget.glassBorderColor ?? theme.glassBorderColor!;
+    final effectiveButtonBorderColor =
+        widget.buttonBorderColor ?? theme.buttonBorderColor!;
+    final effectiveGlassBlur = widget.glassBlur ?? theme.glassBlur!;
+    final effectiveGlassOpacity = widget.glassOpacity ?? theme.glassOpacity!;
+    final effectiveGlassBorderRadius =
+        widget.glassBorderRadius ?? theme.glassBorderRadius!;
+    final effectiveGlassBorderWidth =
+        widget.glassBorderWidth ?? theme.glassBorderWidth!;
+    final effectiveButtonBorderWidth =
+        widget.buttonBorderWidth ?? theme.buttonBorderWidth!;
+    final effectiveHeight = widget.height ?? theme.height!;
+    final effectiveIconPadding = widget.iconPadding ?? theme.iconPadding!;
+
     final textDirection = Directionality.of(context);
     return SizedBox(
-      height: widget.height,
+      height: effectiveHeight,
       child: LayoutBuilder(
         builder: (context, constraints) {
           final maxWidth = min(
@@ -167,7 +195,7 @@ class GlazeNavBarState extends State<GlazeNavBar>
                 ? Alignment.bottomLeft
                 : Alignment.bottomRight,
             child: Container(
-              color: widget.backgroundColor,
+              color: effectiveBackgroundColor,
               width: maxWidth,
               child: ClipRect(
                 clipper: NavCustomClipper(
@@ -179,7 +207,7 @@ class GlazeNavBarState extends State<GlazeNavBar>
                   children: <Widget>[
                     // Floating button
                     Positioned(
-                      bottom: widget.height - 105.0,
+                      bottom: effectiveHeight - 105.0,
                       left: textDirection == TextDirection.rtl
                           ? null
                           : (_pos * maxWidth).clamp(0.0, maxWidth),
@@ -196,14 +224,14 @@ class GlazeNavBarState extends State<GlazeNavBar>
                           child: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              gradient: widget.buttonGradient,
-                              color: widget.buttonGradient == null
-                                  ? (widget.buttonBackgroundColor ??
-                                      widget.color)
+                              gradient: effectiveButtonGradient,
+                              color: effectiveButtonGradient == null
+                                  ? (effectiveButtonBackgroundColor ??
+                                      effectiveColor)
                                   : null,
                               border: Border.all(
-                                color: widget.buttonBorderColor,
-                                width: widget.buttonBorderWidth,
+                                color: effectiveButtonBorderColor,
+                                width: effectiveButtonBorderWidth,
                               ),
                               boxShadow: [
                                 BoxShadow(
@@ -217,7 +245,7 @@ class GlazeNavBarState extends State<GlazeNavBar>
                               color: Colors.transparent,
                               type: MaterialType.circle,
                               child: Padding(
-                                padding: EdgeInsets.all(widget.iconPadding),
+                                padding: EdgeInsets.all(effectiveIconPadding),
                                 child: _buildFloatingIcon(),
                               ),
                             ),
@@ -236,31 +264,31 @@ class GlazeNavBarState extends State<GlazeNavBar>
                           itemsLength: _length,
                           hasLabel: widget.hasLabel,
                           textDirection: Directionality.of(context),
-                          height: widget.height,
+                          height: effectiveHeight,
                           isAndroid: Theme.of(context).platform ==
                               TargetPlatform.android,
                         ),
                         child: BackdropFilter(
                           filter: ImageFilter.blur(
-                            sigmaX: widget.glassBlur,
-                            sigmaY: widget.glassBlur,
+                            sigmaX: effectiveGlassBlur,
+                            sigmaY: effectiveGlassBlur,
                           ),
                           child: Container(
                             width: maxWidth,
-                            height: widget.height,
+                            height: effectiveHeight,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(
-                                widget.glassBorderRadius,
+                                effectiveGlassBorderRadius,
                               ),
-                              gradient: widget.gradient as LinearGradient? ??
+                              gradient: effectiveGradient as LinearGradient? ??
                                   LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      widget.color.withValues(
-                                          alpha: widget.glassOpacity),
-                                      widget.color.withValues(
-                                          alpha: widget.glassOpacity * 0.5),
+                                      effectiveColor.withValues(
+                                          alpha: effectiveGlassOpacity),
+                                      effectiveColor.withValues(
+                                          alpha: effectiveGlassOpacity * 0.5),
                                     ],
                                     stops: const [0.1, 1],
                                   ),
@@ -276,14 +304,14 @@ class GlazeNavBarState extends State<GlazeNavBar>
                       bottom: 0,
                       child: IgnorePointer(
                         child: CustomPaint(
-                          size: Size(maxWidth, widget.height),
+                          size: Size(maxWidth, effectiveHeight),
                           painter: _NavBarBorderPainter(
                             startingLoc: _pos,
                             itemsLength: _length,
                             hasLabel: widget.hasLabel,
                             textDirection: Directionality.of(context),
-                            borderColor: widget.glassBorderColor,
-                            borderWidth: widget.glassBorderWidth,
+                            borderColor: effectiveGlassBorderColor,
+                            borderWidth: effectiveGlassBorderWidth,
                             isAndroid: Theme.of(context).platform ==
                                 TargetPlatform.android,
                           ),
@@ -296,7 +324,7 @@ class GlazeNavBarState extends State<GlazeNavBar>
                       right: 0,
                       bottom: 0,
                       child: SizedBox(
-                        height: widget.height,
+                        height: effectiveHeight,
                         child: Row(
                           children: widget.items.map((item) {
                             return NavBarItemWidget(
@@ -375,13 +403,14 @@ class GlazeNavBarState extends State<GlazeNavBar>
       widget.onTap!(index);
     }
     final newPosition = index / _length;
+    final theme = GlazeNavBarTheme.of(context).resolve(context);
     setState(() {
       _startingPos = _pos;
       _endingIndex = index;
       _animationController.animateTo(
         newPosition,
-        duration: widget.animationDuration,
-        curve: widget.animationCurve,
+        duration: widget.animationDuration ?? theme.animationDuration!,
+        curve: widget.animationCurve ?? theme.animationCurve!,
       );
     });
   }
