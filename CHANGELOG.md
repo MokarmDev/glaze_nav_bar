@@ -4,10 +4,18 @@ All notable changes to this project will be documented in this file.
 
 ## [1.2.1] - 2026-01-20
 
+### 📱 Example App
+
+- 🎨 **Complete Example Application** - Added fully functional example app demonstrating all GlazeNavBar features
+- 🌓 **Theme Showcase** - Live demonstration of dark and light mode support
+- 💫 **Interactive Demo** - Shows gradient effects, glassmorphism, badges, and smooth animations
+- 🎯 **Best Practices** - Example implementation following recommended patterns
+
 ### 📚 Documentation
 
 - 🎬 **Demo Videos** - Added visual demonstrations showcasing dark and light mode in README
 - ✨ **Enhanced README** - Improved documentation with side-by-side video comparisons
+- 📖 **Live Examples** - Better documentation with working code samples
 
 ---
 
